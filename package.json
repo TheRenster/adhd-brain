@@ -1,0 +1,13 @@
+{
+  "name": "adhd-brain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ADHD Brain workspace with persistent server-backed storage",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

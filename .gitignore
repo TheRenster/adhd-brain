@@ -1,0 +1,4 @@
+node_modules/
+.nte-data/
+.env
+.DS_Store

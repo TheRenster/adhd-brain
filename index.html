@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADHD Brain</title>
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=zodiak@400,700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem;
+      --radius-sm: 0.375rem; --radius-md: 0.75rem; --radius-lg: 1rem; --radius-xl: 1.25rem; --radius-full: 9999px;
+      --color-bg: #f7f6f2; --color-surface: #f9f8f5; --color-surface-2: #fbfbf9; --color-surface-offset: #f1eee8;
+      --color-border: #d8d4cb; --color-divider: #e5e1d8; --color-text: #26241e; --color-text-muted: #6d6a62;
+      --color-text-faint: #9a978e; --color-primary: #01696f; --color-primary-hover: #0c4e54; --color-primary-highlight: #d8ebe7;
+      --color-success: #437a22; --color-warning: #964219; --color-error: #a12c7b; --color-blue: #006494; --color-purple: #7a39bb;
+      --shadow-sm: 0 1px 2px rgba(20,20,16,.06); --shadow-md: 0 10px 30px rgba(20,20,16,.08); --shadow-lg: 0 20px 50px rgba(20,20,16,.12);
+      --font-body: 'Satoshi', Inter, sans-serif; --font-display: 'Zodiak', Georgia, serif;
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    [data-theme="dark"] {
+      --color-bg: #171614; --color-surface: #1c1b19; --color-surface-2: #201f1d; --color-surface-offset: #262422;
+      --color-border: #3b3833; --color-divider: #2d2a27; --color-text: #e3e0da; --color-text-muted: #ada89f;
+      --color-text-faint: #7b776f; --color-primary: #4f98a3; --color-primary-hover: #227f8b; --color-primary-highlight: #313b3b;
+      --color-success: #79ad57; --color-warning: #d18a60; --color-error: #d163a7; --color-blue: #76b8e8; --color-purple: #b58ade;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.2); --shadow-md: 0 10px 30px rgba(0,0,0,.28); --shadow-lg: 0 20px 50px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-height: 100vh; font-family: var(--font-body); font-size: var(--text-base); background: var(--color-bg); color: var(--color-text); }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; border: 0; background: none; }
+    .app-shell { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+    .sidebar { background: color-mix(in oklab, var(--color-surface) 80%, var(--color-primary-highlight)); border-right: 1px solid var(--color-border); padding: var(--space-4); position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    .logo { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-8); }
+    .logo svg { width: 36px; height: 36px; color: var(--color-primary); }
+    .logo-mark { padding: var(--space-2); border-radius: var(--radius-md); background: var(--color-primary-highlight); }
+    .logo h1 { margin: 0; font: 700 var(--text-lg)/1.1 var(--font-display); }
+    .logo p { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
+    .nav-group { margin-bottom: var(--space-4); }
+    .nav-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .08em; color: var(--color-text-faint); margin-bottom: var(--space-3); }
+    .nav-link { width: 100%; display: flex; align-items: center; gap: var(--space-3); padding: .68rem .8rem; border-radius: var(--radius-md); color: var(--color-text); text-align: left; transition: background var(--transition), color var(--transition), transform var(--transition); }
+    .nav-link:hover, .nav-link.active { background: var(--color-surface-2); transform: translateX(2px); }
+    .sidebar-foot { margin-top: var(--space-8); padding: var(--space-4); border-radius: var(--radius-lg); background: var(--color-surface-2); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); }
+    .sidebar-foot h3 { margin: 0 0 .35rem; font-size: var(--text-sm); }
+    .sidebar-foot p { margin: 0 0 .75rem; color: var(--color-text-muted); font-size: var(--text-xs); }
+    .main { padding: var(--space-4); overflow: auto; }
+    .topbar { display: flex; justify-content: space-between; gap: var(--space-3); align-items: center; margin-bottom: var(--space-4); }
+    .topbar h2 { margin: 0; font-size: var(--text-xl); font-family: var(--font-display); }
+    .topbar p { margin: .35rem 0 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+    .top-actions { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; padding: .75rem 1rem; border-radius: var(--radius-full); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); background: var(--color-surface); color: var(--color-text); transition: all var(--transition); }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    .btn-primary { background: var(--color-primary); border-color: var(--color-primary); color: #f7fbfa; }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .page { display: none; }
+    .page.active { display: block; }
+    .grid { display: grid; gap: var(--space-3); }
+    .grid-hero { grid-template-columns: 1.7fr 1fr; }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .card { background: var(--color-surface); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); border-radius: var(--radius-xl); padding: var(--space-4); box-shadow: var(--shadow-sm); }
+    .card h3, .card h4 { margin: 0 0 .45rem; }
+    .eyebrow { font-size: var(--text-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: .6rem; }
+    .muted { color: var(--color-text-muted); }
+    .hero-card { padding: var(--space-5); background: linear-gradient(135deg, color-mix(in oklab, var(--color-primary-highlight) 75%, var(--color-surface)), var(--color-surface-2)); }
+    .hero-card h3 { margin: 0; font-family: var(--font-display); font-size: clamp(2rem, 1.5rem + 2vw, 3rem); line-height: 1; max-width: 10ch; }
+    .hero-card p { color: var(--color-text-muted); max-width: 50ch; }
+    .stat { padding: var(--space-3); border-radius: var(--radius-lg); background: var(--color-surface-2); }
+    .stat strong { display: block; font-size: 1.9rem; font-family: var(--font-display); margin-bottom: .15rem; }
+    .pill { display: inline-flex; align-items: center; gap: .35rem; padding: .4rem .7rem; border-radius: var(--radius-full); font-size: var(--text-xs); background: var(--color-primary-highlight); color: var(--color-primary); }
+    .stack { display: flex; flex-direction: column; gap: var(--space-3); }
+    .task, .note, .scan-result, .dialogue-turn, .habit { padding: .85rem; border-radius: var(--radius-lg); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); background: var(--color-surface-2); }
+    .task-top, .row-between { display: flex; justify-content: space-between; gap: .75rem; align-items: flex-start; }
+    .task-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+    .task-main { display: flex; gap: .65rem; align-items: flex-start; flex: 1; min-width: 0; }
+    .task-complete { margin-top: .12rem; width: 1rem; height: 1rem; accent-color: var(--color-primary); }
+    .task-title { font-weight: 700; }
+    .task-content { min-width: 0; }
+    .task-content .kicker { margin-top: .2rem; }
+    .task-actions { display: inline-flex; gap: .35rem; flex-wrap: wrap; }
+    .task-action-btn { min-height: 30px; padding: .3rem .55rem; border-radius: var(--radius-full); border: 1px solid color-mix(in oklab, var(--color-text) 14%, transparent); background: var(--color-surface); color: var(--color-text-muted); font-size: var(--text-xs); }
+    .task-action-btn:hover { color: var(--color-text); }
+    .task.completed .task-title,
+    .task.completed .kicker { text-decoration: line-through; color: var(--color-text-faint); }
+    .completed-list .task { background: color-mix(in oklab, var(--color-surface-2) 75%, var(--color-primary-highlight)); }
+    .completed-list .task-main { opacity: .9; }
+    .badge { display: inline-flex; align-items: center; padding: .3rem .55rem; border-radius: var(--radius-full); font-size: var(--text-xs); }
+    .urgent-important { background: color-mix(in oklab, var(--color-error) 14%, var(--color-surface)); color: var(--color-error); }
+    .important { background: color-mix(in oklab, var(--color-success) 14%, var(--color-surface)); color: var(--color-success); }
+    .urgent { background: color-mix(in oklab, var(--color-warning) 16%, var(--color-surface)); color: var(--color-warning); }
+    .later { background: color-mix(in oklab, var(--color-blue) 14%, var(--color-surface)); color: var(--color-blue); }
+    .board { display: grid; grid-template-columns: repeat(4, minmax(250px,1fr)); gap: var(--space-4); align-items: start; }
+    .column { background: var(--color-surface); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); border-radius: var(--radius-xl); padding: var(--space-4); min-height: 260px; }
+    .column h4 { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
+    .column .task { margin-bottom: var(--space-3); cursor: grab; }
+    .calendar { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: .65rem; }
+    .calendar-toolbar { display: grid; grid-template-columns: 1fr auto auto; gap: .65rem; align-items: center; margin: 1rem 0; }
+    .calendar-embed { width: 100%; min-height: 420px; border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); border-radius: var(--radius-lg); background: var(--color-surface-2); }
+    .day { min-height: 140px; border-radius: var(--radius-lg); padding: .8rem; background: var(--color-surface); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); }
+    .day strong { display: block; margin-bottom: .45rem; }
+    .mini-event { margin-top: .5rem; padding: .45rem .55rem; border-radius: .8rem; background: var(--color-surface-offset); font-size: var(--text-xs); }
+    .split { display: grid; grid-template-columns: 1.2fr .8fr; gap: var(--space-4); }
+    .toolbar { display: flex; gap: .65rem; flex-wrap: wrap; margin-bottom: var(--space-4); }
+    .input, .textarea, .select { width: 100%; border-radius: var(--radius-lg); border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent); background: var(--color-surface-2); color: var(--color-text); padding: .9rem 1rem; }
+    .textarea { min-height: 130px; resize: vertical; }
+    .dialogue-window { display: flex; flex-direction: column; gap: var(--space-3); min-height: 340px; }
+    .dialogue-turn.ai { background: color-mix(in oklab, var(--color-primary-highlight) 65%, var(--color-surface)); }
+    .note-map { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-4); }
+    .link-list { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .55rem; }
+    .tag { padding: .3rem .55rem; border-radius: var(--radius-full); background: var(--color-surface-offset); color: var(--color-text-muted); font-size: var(--text-xs); }
+    .dropzone { border: 1.5px dashed color-mix(in oklab, var(--color-primary) 32%, var(--color-border)); border-radius: var(--radius-xl); padding: var(--space-6); text-align: center; background: color-mix(in oklab, var(--color-primary-highlight) 45%, var(--color-surface)); }
+    .progress { height: 10px; border-radius: var(--radius-full); background: var(--color-surface-offset); overflow: hidden; }
+    .progress > span { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; }
+    .kicker { color: var(--color-text-muted); font-size: var(--text-sm); }
+    .empty { padding: var(--space-8); text-align: center; color: var(--color-text-muted); }
+    .theme-toggle { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; }
+    .footer-note { margin-top: var(--space-5); color: var(--color-text-faint); font-size: var(--text-xs); }
+    .dashboard-dense { display: grid; gap: .8rem; }
+    .dashboard-hero { display: grid; grid-template-columns: 1.4fr .8fr; align-items: center; min-height: 142px; }
+    .dashboard-hero h3 { font-size: clamp(1.55rem, 1.1rem + 1.15vw, 2.1rem); max-width: 12ch; margin: 0; }
+    .dashboard-hero p { margin: .55rem 0 0; font-size: var(--text-sm); max-width: 58ch; }
+    .dashboard-pills { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: flex-end; align-content: start; }
+    .dashboard-stats-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
+    .compact-card { min-height: 118px; }
+    .big-number { display: block; font-size: 1.8rem; line-height: 1; margin: .15rem 0 .35rem; font-family: var(--font-display); }
+    .dashboard-bottom-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+    .dashboard-column-card { min-height: 290px; }
+    .compact-stack { gap: .55rem; }
+    #dashboard .task, #dashboard .habit { padding: .72rem; }
+    #dashboard .card h3 { font-size: 1rem; }
+    @media (min-width: 1101px) {
+      body { overflow: hidden; }
+      .app-shell { height: 100vh; }
+      .main { height: 100vh; }
+      #dashboard.active { height: calc(100vh - 104px); overflow: hidden; }
+      .dashboard-dense { height: 100%; grid-template-rows: auto auto 1fr; }
+      .dashboard-bottom-row > .card { height: 100%; }
+    }
+    @media (max-width: 1100px) {
+      .dashboard-hero, .dashboard-stats-row, .dashboard-bottom-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 760px) {
+      .dashboard-hero, .dashboard-stats-row, .dashboard-bottom-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1100px) {
+      .app-shell, .grid-hero, .split { grid-template-columns: 1fr; }
+      .grid-4, .grid-3, .grid-2, .board, .note-map { grid-template-columns: 1fr 1fr; }
+      .sidebar { position: relative; height: auto; }
+    }
+    @media (max-width: 760px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { height: auto; }
+      .grid-4, .grid-3, .grid-2, .board, .note-map, .calendar { grid-template-columns: 1fr; }
+      .calendar-toolbar { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .main { padding: var(--space-4); }
+      .day { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="sr-only">Skip to content</a>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-label="NTE logo">
+            <path d="M4 18V6l8 8 8-8v12" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 10v8M16 10v8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>ADHD Brain</h1>
+          <p>Personal planning, notes, and task workflow</p>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <button class="nav-link active" data-page-target="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</button>
+        <button class="nav-link" data-page-target="inbox"><i data-lucide="inbox"></i> Inbox</button>
+        <button class="nav-link" data-page-target="board"><i data-lucide="columns-3"></i> Personal kanban</button>
+        <button class="nav-link" data-page-target="calendar"><i data-lucide="calendar-days"></i> Calendar</button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Thinking</div>
+        <button class="nav-link" data-page-target="dialogue"><i data-lucide="messages-square"></i> Socratic dialogue</button>
+        <button class="nav-link" data-page-target="notes"><i data-lucide="network"></i> Zettelkasten</button>
+        <button class="nav-link" data-page-target="scan"><i data-lucide="scan-line"></i> Journal scan</button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Support</div>
+        <button class="nav-link" data-page-target="obsessions"><i data-lucide="brain"></i> Obsessions</button>
+      </div>
+
+    </aside>
+
+    <main class="main" id="main">
+      <section class="topbar">
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="pageSubtitle">Your week at a glance, with the next right thing always visible.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn" id="quickCapture"><i data-lucide="plus"></i> Quick capture</button>
+          <button class="btn btn-primary" id="newDialogue"><i data-lucide="sparkles"></i> Start dialogue</button>
+          <button class="btn theme-toggle" data-theme-toggle aria-label="Switch color mode"><i data-lucide="moon-star"></i></button>
+        </div>
+      </section>
+
+      <section class="page active" id="dashboard">
+        <div class="dashboard-dense">
+          <article class="card hero-card dashboard-hero">
+            <div>
+              <div class="eyebrow">This week</div>
+              <h3>Plan clearly and keep the next step visible.</h3>
+              <p>A single workspace for weekly planning, task flow, reflective dialogue, OCR capture, and connected notes.</p>
+            </div>
+            <div class="dashboard-pills">
+              <span class="pill"><i data-lucide="target"></i> 3 focus tasks</span>
+              <span class="pill"><i data-lucide="book-open-text"></i> 2 notes linked</span>
+              <span class="pill"><i data-lucide="scan-search"></i> 1 scan pending</span>
+            </div>
+          </article>
+
+          <div class="dashboard-stats-row">
+            <article class="card compact-card"><div class="eyebrow">Momentum</div><strong class="big-number">72%</strong><p class="muted">Intentional progress this week</p><div class="progress"><span style="width:72%"></span></div></article>
+            <article class="card compact-card"><div class="eyebrow">Doing</div><strong class="big-number">4</strong><p class="muted">Tasks in progress</p></article>
+            <article class="card compact-card"><div class="eyebrow">Notes</div><strong class="big-number">9</strong><p class="muted">Linked to active work</p></article>
+            <article class="card compact-card"><div class="eyebrow">Inbox</div><strong class="big-number">6</strong><p class="muted">Unprocessed captures</p></article>
+          </div>
+
+          <div class="dashboard-bottom-row">
+            <article class="card dashboard-column-card">
+              <div class="row-between"><h3>Today</h3><span class="badge urgent-important">do now</span></div>
+              <div class="stack compact-stack">
+                <div class="task"><div class="task-top"><strong>Teach seminar</strong><span class="badge later">2:00 PM</span></div><div class="kicker">Bring literature notes and rubric</div></div>
+                <div class="task"><div class="task-top"><strong>Grant abstract revision</strong><span class="badge urgent-important">35 min</span></div><div class="kicker">Urgent and important</div></div>
+                <div class="task"><div class="task-top"><strong>Reply to department chair</strong><span class="badge urgent">blocked</span></div><div class="kicker">Needs scheduling decision</div></div>
+              </div>
+            </article>
+
+            <article class="card dashboard-column-card">
+              <div class="row-between"><h3>Next right things</h3><span class="badge important">this week</span></div>
+              <div class="stack compact-stack">
+                <div class="task"><div class="task-top"><strong>Outline next week’s lecture</strong><span class="badge important">20 min</span></div><div class="kicker">Linked note: Metacognition prompts</div></div>
+                <div class="task"><div class="task-top"><strong>Process two journal scans</strong><span class="badge later">low pressure</span></div><div class="kicker">Route to notes and reading queue</div></div>
+                <div class="task"><div class="task-top"><strong>Scope student feedback redesign</strong><span class="badge important">dialogue</span></div><div class="kicker">Use Socratic dialogue to define the first step</div></div>
+              </div>
+            </article>
+
+            <article class="card dashboard-column-card">
+              <div class="row-between"><h3>Attention signals</h3><span class="badge later">adaptive</span></div>
+              <div class="stack compact-stack">
+                <div class="habit"><strong>Overloaded?</strong><div class="kicker">4 items are marked high effort. Break one down before adding more.</div></div>
+                <div class="habit"><strong>Doing cap reached</strong><div class="kicker">Finish or pause one task before starting another.</div></div>
+                <div class="habit"><strong>Save this idea</strong><div class="kicker">Last dialogue suggests a note on feedback fatigue in grading.</div></div>
+              </div>
+            </article>
+          </div>
+          <article class="card">
+            <div class="row-between">
+              <h3>Completed</h3>
+              <span class="badge later">saved after refresh</span>
+            </div>
+            <div class="stack completed-list" id="completedTasks"></div>
+            <div class="empty" id="completedEmpty">No completed tasks yet.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="inbox">
+        <div class="grid grid-2">
+          <article class="card">
+            <div class="eyebrow">Capture fast</div>
+            <h3>Universal inbox</h3>
+            <p class="muted">Drop tasks, ideas, references, anxieties, and half-formed notes here before deciding what they are.</p>
+            <div class="stack" style="margin-top:1rem;">
+              <input class="input" id="inboxTitle" placeholder="Type a thought, task, or reminder" />
+              <textarea class="textarea" id="inboxDetails" placeholder="Optional context, deadline hints, or why this matters"></textarea>
+              <label>Importance <input type="range" min="1" max="5" value="3" class="input" id="inboxImportance" /></label>
+              <label>Urgency <input type="range" min="1" max="5" value="3" class="input" id="inboxUrgency" /></label>
+              <label>Energy needed <input type="range" min="1" max="5" value="3" class="input" id="inboxEnergy" /></label>
+              <label>Due date <input type="date" class="input" id="inboxDueDate" /></label>
+              <div class="toolbar">
+                <select class="select" id="inboxType">
+                  <option>Task</option>
+                  <option>Note</option>
+                  <option>Calendar item</option>
+                  <option>Dialogue prompt</option>
+                  <option>Obsession loop</option>
+                </select>
+                <button class="btn btn-primary" id="saveInboxItem"><i data-lucide="inbox"></i> Save to inbox</button>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Triage queue</div>
+            <h3>Unprocessed items</h3>
+            <div class="stack" id="inboxList">
+              <div class="task"><div class="task-top"><strong>Follow up on IRB revisions</strong><span class="badge urgent-important">Task</span></div><div class="kicker">Might belong in important + urgent</div></div>
+              <div class="task"><div class="task-top"><strong>“Students resist reflection when exhausted”</strong><span class="badge later">Note</span></div><div class="kicker">Save to notes and tag pedagogy</div></div>
+              <div class="task"><div class="task-top"><strong>What is the real bottleneck in course prep?</strong><span class="badge important">Dialogue</span></div><div class="kicker">Use Socratic dialogue to unpack</div></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="board">
+        <article class="card">
+          <div class="row-between">
+            <div>
+              <div class="eyebrow">Personal kanban</div>
+              <h3>Agile flow board</h3>
+            </div>
+            <span class="pill"><i data-lucide="circle-alert"></i> WIP limit on Doing = 4</span>
+          </div>
+          <div class="board" id="kanbanBoard">
+            <div class="column" data-column="Inbox"><h4>Inbox <span class="badge later">2</span></h4><div class="task" draggable="true">Draft reflection prompt bank</div><div class="task" draggable="true">Scan yellow notebook</div></div>
+            <div class="column" data-column="Next"><h4>Next <span class="badge important">3</span></h4><div class="task" draggable="true">Revise abstract paragraph 2</div><div class="task" draggable="true">Prepare seminar slides</div><div class="task" draggable="true">Book office hours blocks</div></div>
+            <div class="column" data-column="Doing"><h4>Doing <span class="badge urgent-important">4</span></h4><div class="task" draggable="true">Answer department email</div><div class="task" draggable="true">Grade 8 responses</div><div class="task" draggable="true">Plan Wednesday lecture</div><div class="task" draggable="true">Tidy citations note</div></div>
+            <div class="column" data-column="Done"><h4>Done <span class="badge later">2</span></h4><div class="task" draggable="true">Submit meeting agenda</div><div class="task" draggable="true">Archive last week notes</div></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="priorities">
+        <div class="grid grid-2">
+          <article class="card">
+            <div class="eyebrow">Auto-sort</div>
+            <h3>Eisenhower assistant</h3>
+            <p class="muted">Inbox scoring now auto-sorts tasks here so planning is in one flow.</p>
+            <div class="stack">
+              <div class="task"><div class="task-top"><strong>Urgent + Important</strong><span class="badge urgent-important">Do now</span></div><div class="kicker">High urgency and high importance tasks from inbox.</div></div>
+              <div class="stack" id="priorityUrgentImportant"></div>
+              <div class="task"><div class="task-top"><strong>Important + Not urgent</strong><span class="badge important">Schedule</span></div><div class="kicker">Important work that should be scheduled this week.</div></div>
+              <div class="stack" id="priorityImportant"></div>
+              <div class="task"><div class="task-top"><strong>Urgent + Not important</strong><span class="badge urgent">Streamline</span></div><div class="kicker">Urgent items to delegate, simplify, or time-box.</div></div>
+              <div class="stack" id="priorityUrgent"></div>
+              <div class="task"><div class="task-top"><strong>Neither</strong><span class="badge later">Defer</span></div><div class="kicker">Low priority items from inbox capture.</div></div>
+              <div class="stack" id="priorityLater"></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Scoring flow</div>
+            <h3>Scoring is now in Inbox</h3>
+            <div class="stack">
+              <div class="task"><strong>How it works</strong><div class="kicker">When you create an inbox task, set Importance + Urgency + Energy there.</div></div>
+              <div class="task"><strong>Auto-sort</strong><div class="kicker">The task appears in the matching quadrant automatically.</div></div>
+              <div class="task"><strong>Planner-first workflow</strong><div class="kicker">No separate scoring step needed in Priorities anymore.</div></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="calendar">
+        <article class="card">
+          <div class="row-between">
+            <div>
+              <div class="eyebrow">Short and long horizon</div>
+              <h3>Weekly calendar</h3>
+            </div>
+            <span class="pill"><i data-lucide="clock-3"></i> Time blocking enabled</span>
+          </div>
+          <div class="calendar-toolbar">
+            <input class="input" id="googleCalendarUrl" placeholder="Paste Google Calendar embed URL or public calendar ID" />
+            <button class="btn" id="saveCalendarLink"><i data-lucide="link"></i> Link calendar</button>
+            <button class="btn btn-primary" id="openGoogleCalendar"><i data-lucide="external-link"></i> Open Google Calendar</button>
+          </div>
+          <iframe class="calendar-embed" id="googleCalendarEmbed" title="Google Calendar embed" loading="lazy"></iframe>
+          <div class="calendar">
+            <div class="day"><strong>Mon</strong><div class="mini-event">8:00 Deep work · Abstract</div><div class="mini-event">1:00 Seminar prep</div></div>
+            <div class="day"><strong>Tue</strong><div class="mini-event">10:30 Office hours</div><div class="mini-event">3:00 Grade batch 1</div></div>
+            <div class="day"><strong>Wed</strong><div class="mini-event">9:00 Lecture build</div><div class="mini-event">2:00 Teach seminar</div></div>
+            <div class="day"><strong>Thu</strong><div class="mini-event">11:00 Research note synthesis</div><div class="mini-event">4:00 Admin cleanup</div></div>
+            <div class="day"><strong>Fri</strong><div class="mini-event">9:30 Student feedback review</div><div class="mini-event">1:00 Dialogue reflection</div></div>
+            <div class="day"><strong>Sat</strong><div class="mini-event">Light capture only</div></div>
+            <div class="day"><strong>Sun</strong><div class="mini-event">Weekly reset + archive</div></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="dialogue">
+        <div class="split">
+          <article class="card">
+            <div class="eyebrow">AI reflection</div>
+            <h3>Socratic dialogue</h3>
+            <p class="muted">The dialogue area is ready for future AI connection, but live requests are disabled until you add an API key. For now, a local guided flow simulates the experience.</p>
+            <div class="toolbar">
+              <input class="input" id="dialoguePrompt" placeholder="What do you want to think through?" />
+              <button class="btn btn-primary" id="runDialogue"><i data-lucide="messages-square"></i> Run local dialogue</button>
+            </div>
+            <div class="dialogue-window" id="dialogueWindow">
+              <div class="dialogue-turn ai"><strong>AI:</strong> What feels unclear, heavy, or easy to avoid right now?</div>
+              <div class="dialogue-turn"><strong>You:</strong> I keep delaying the grant abstract because I do not know what level of detail it needs.</div>
+              <div class="dialogue-turn ai"><strong>AI:</strong> If the abstract were “good enough,” what would it include and what can safely wait for later?</div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Save output</div>
+            <h3>Dialogue summary → note</h3>
+            <div class="stack">
+              <div class="task"><strong>Summary</strong><div class="kicker" id="dialogueSummary">The main obstacle is uncertainty about scope. Next step: define a minimum viable abstract structure.</div></div>
+              <div class="task"><strong>Actionable next step</strong><div class="kicker">Draft three bullets: problem, contribution, method.</div></div>
+              <div class="task"><strong>Zettelkasten destination</strong><div class="kicker">Tag with research-writing, scope, academic-output</div></div>
+              <button class="btn btn-primary" id="saveDialogueNote"><i data-lucide="save"></i> Save to note board</button>
+              <button class="btn" id="configureClaude"><i data-lucide="key-round"></i> Claude API placeholder</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="notes">
+        <div class="grid grid-2">
+          <article class="card">
+            <div class="eyebrow">Knowledge graph</div>
+            <h3>Zettelkasten board</h3>
+            <div class="note-map" id="noteMap">
+              <div class="note"><strong>Minimum viable abstract</strong><div class="kicker">A weak draft is often a scope problem disguised as procrastination.</div><div class="link-list"><span class="tag">research-writing</span><span class="tag">scope</span><span class="tag">dialogue</span></div></div>
+              <div class="note"><strong>Feedback fatigue in grading</strong><div class="kicker">Students respond better when reflection prompts are specific and low-friction.</div><div class="link-list"><span class="tag">teaching</span><span class="tag">assessment</span></div></div>
+              <div class="note"><strong>Lecture preparation rhythm</strong><div class="kicker">Lecture design improves when split across outline, examples, and final polish.</div><div class="link-list"><span class="tag">workflow</span><span class="tag">teaching</span></div></div>
+              <div class="note"><strong>Journal scan insight</strong><div class="kicker">Handwritten notes often contain unresolved tasks hidden inside reflection language.</div><div class="link-list"><span class="tag">ocr</span><span class="tag">capture</span></div></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Atomic note creator</div>
+            <h3>New note</h3>
+            <div class="stack">
+              <input class="input" id="noteTitle" placeholder="Title" />
+              <textarea class="textarea" id="noteBody" placeholder="Core idea in one atomic note"></textarea>
+              <input class="input" id="noteTags" placeholder="Tags, comma-separated" />
+              <div class="toolbar">
+                <button class="btn" id="exportNotesMarkdown"><i data-lucide="file-down"></i> Export notes (.md)</button>
+              </div>
+              <button class="btn btn-primary" id="addNote"><i data-lucide="plus"></i> Add note</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="scan">
+        <div class="grid grid-2">
+          <article class="card">
+            <div class="eyebrow">Bullet journal OCR</div>
+            <h3>Scan and translate handwriting</h3>
+            <div class="dropzone" id="dropzone">
+              <i data-lucide="scan-search" style="margin:0 auto .8rem;"></i>
+              <strong>Drop an image here or choose a file</strong>
+              <p class="muted">This prototype simulates OCR extraction locally. A future version can connect to a handwriting OCR service.</p>
+              <input type="file" id="scanInput" accept="image/*" style="margin-top:1rem;" />
+            </div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Extracted content</div>
+            <h3>OCR results</h3>
+            <div class="stack" id="scanResults">
+              <div class="scan-result"><strong>Monday:</strong> finalize seminar prompt bank</div>
+              <div class="scan-result"><strong>Idea:</strong> students need smaller reflection steps</div>
+              <div class="scan-result"><strong>Reminder:</strong> email library about reserve copy</div>
+            </div>
+            <div class="toolbar" style="margin-top:1rem;">
+              <button class="btn" id="scanToInbox"><i data-lucide="inbox"></i> Send to inbox</button>
+              <button class="btn btn-primary" id="scanToNotes"><i data-lucide="notebook-tabs"></i> Save as notes</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="obsessions">
+        <div class="grid grid-2">
+          <article class="card">
+            <div class="eyebrow">Private capture</div>
+            <h3>Obsession / looping thought log</h3>
+            <p class="muted">A place to park repetitive concerns so they do not hijack the rest of the workflow.</p>
+            <div class="stack">
+              <textarea class="textarea" id="obsessionText" placeholder="Write the looping thought, worry, or fixation here"></textarea>
+              <div class="toolbar">
+                <button class="btn btn-primary" id="saveObsession"><i data-lucide="brain-circuit"></i> Save loop</button>
+                <button class="btn" id="sendToDialogue"><i data-lucide="arrow-right-circle"></i> Turn into dialogue prompt</button>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Recent loops</div>
+            <div class="stack" id="obsessionList">
+              <div class="task"><strong>I am behind on reading and that means I am failing the project.</strong><div class="kicker">Reframe candidate: delay is not collapse; identify one next reading move.</div></div>
+              <div class="task"><strong>I need the perfect note system before I can write.</strong><div class="kicker">Reframe candidate: notes support writing; they do not have to be complete first.</div></div>
+            </div>
+          </article>
+        </div>
+        <p class="footer-note">This section is separate from regular tasks so looping thoughts do not masquerade as action items.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const navLinks = document.querySelectorAll('[data-page-target]');
+    const pageMeta = {
+      dashboard: ['Dashboard', 'Your week at a glance, with the next right thing always visible.'],
+      inbox: ['Inbox', 'Capture first, decide later.'],
+      board: ['Personal kanban', 'Keep work moving without overloading your attention.'],
+      priorities: ['Priorities', 'Sort tasks by urgency, importance, and energy.'],
+      calendar: ['Calendar', 'Balance short-term commitments and longer-range work.'],
+      dialogue: ['Socratic dialogue', 'Think with structure, then save the insight.'],
+      notes: ['Zettelkasten', 'Store only the distilled ideas worth keeping.'],
+      scan: ['Journal scan', 'Turn handwritten pages into digital action and knowledge.'],
+      obsessions: ['Obsessions', 'Park looping thoughts without letting them run the whole day.']
+    };
+
+    function setPage(id) {
+      pages.forEach(p => p.classList.toggle('active', p.id === id));
+      navLinks.forEach(n => n.classList.toggle('active', n.dataset.pageTarget === id));
+      const [title, subtitle] = pageMeta[id];
+      document.getElementById('pageTitle').textContent = title;
+      document.getElementById('pageSubtitle').textContent = subtitle;
+    }
+    navLinks.forEach(btn => btn.addEventListener('click', () => setPage(btn.dataset.pageTarget)));
+
+    let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelector('[data-theme-toggle]').addEventListener('click', () => {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    });
+
+    function toast(message) { alert(message); }
+    const COMPLETED_STORAGE_KEY = 'nte-completed-tasks';
+    const INBOX_TASKS_STORAGE_KEY = 'nte-inbox-tasks';
+    const PRIORITY_TASKS_STORAGE_KEY = 'nte-priority-tasks';
+    const NOTES_STORAGE_KEY = 'nte-notes';
+    const GOOGLE_CALENDAR_STORAGE_KEY = 'nte-google-calendar';
+    const KANBAN_STORAGE_KEY = 'nte-kanban-columns';
+    const OBSESSIONS_STORAGE_KEY = 'nte-obsession-loops';
+    const SCAN_RESULTS_STORAGE_KEY = 'nte-scan-results';
+    const STORAGE_KEYS = [
+      COMPLETED_STORAGE_KEY,
+      INBOX_TASKS_STORAGE_KEY,
+      PRIORITY_TASKS_STORAGE_KEY,
+      NOTES_STORAGE_KEY,
+      GOOGLE_CALENDAR_STORAGE_KEY,
+      KANBAN_STORAGE_KEY,
+      OBSESSIONS_STORAGE_KEY,
+      SCAN_RESULTS_STORAGE_KEY
+    ];
+    const CLOUD_SYNC_ENDPOINT = '/api/state';
+    let cloudSyncTimeout = null;
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function getCompletedTasks() {
+      try {
+        return JSON.parse(localStorage.getItem(COMPLETED_STORAGE_KEY) || '[]');
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveCompletedTasks(tasks) {
+      localStorage.setItem(COMPLETED_STORAGE_KEY, JSON.stringify(tasks));
+      scheduleCloudSync();
+    }
+
+    function getStoredArray(key) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveStoredArray(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+      scheduleCloudSync();
+    }
+
+    function collectAppState() {
+      const state = {};
+      STORAGE_KEYS.forEach((key) => {
+        const value = localStorage.getItem(key);
+        if (value !== null) state[key] = value;
+      });
+      return state;
+    }
+
+    function hydrateAppState(state) {
+      if (!state || typeof state !== 'object') return;
+      STORAGE_KEYS.forEach((key) => {
+        if (typeof state[key] === 'string') {
+          localStorage.setItem(key, state[key]);
+        }
+      });
+    }
+
+    async function loadCloudState() {
+      if (!location.protocol.startsWith('http')) return;
+      try {
+        const response = await fetch(CLOUD_SYNC_ENDPOINT, { method: 'GET' });
+        if (!response.ok) return;
+        const payload = await response.json();
+        hydrateAppState(payload?.state);
+      } catch (error) {
+        console.warn('Cloud state unavailable; using local storage.');
+      }
+    }
+
+    async function saveCloudStateNow() {
+      if (!location.protocol.startsWith('http')) return;
+      try {
+        await fetch(CLOUD_SYNC_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state: collectAppState() })
+        });
+      } catch (error) {
+        console.warn('Cloud save failed; local data still kept in browser.');
+      }
+    }
+
+    function scheduleCloudSync() {
+      clearTimeout(cloudSyncTimeout);
+      cloudSyncTimeout = setTimeout(() => {
+        saveCloudStateNow();
+      }, 350);
+    }
+
+    function updateCompletedEmptyState() {
+      const list = document.getElementById('completedTasks');
+      const empty = document.getElementById('completedEmpty');
+      if (!list || !empty) return;
+      empty.style.display = list.children.length ? 'none' : 'block';
+    }
+
+    function createCompletedTaskElement(taskData, index) {
+      const item = document.createElement('div');
+      item.className = 'task completed';
+      item.innerHTML = `
+        <div class="task-row">
+          <div class="task-main">
+            <input class="task-complete" type="checkbox" checked disabled aria-label="Task completed" />
+            <div class="task-content">
+              <div class="task-top">
+                <strong class="task-title">${escapeHtml(taskData.title)}</strong>
+                ${taskData.badgeText ? `<span class="${taskData.badgeClass}">${escapeHtml(taskData.badgeText)}</span>` : ''}
+              </div>
+              <div class="kicker">${escapeHtml(taskData.details) || 'No extra details'}</div>
+            </div>
+          </div>
+          <div class="task-actions">
+            <button class="task-action-btn" type="button" data-restore-index="${index}">Restore</button>
+            <button class="task-action-btn" type="button" data-delete-index="${index}">Delete</button>
+          </div>
+        </div>
+      `;
+      return item;
+    }
+
+    function renderCompletedTasks() {
+      const list = document.getElementById('completedTasks');
+      if (!list) return;
+      const tasks = getCompletedTasks();
+      list.innerHTML = '';
+      tasks.forEach((taskData, index) => list.appendChild(createCompletedTaskElement(taskData, index)));
+      updateCompletedEmptyState();
+    }
+
+    function addCompletedTask(taskData) {
+      const tasks = getCompletedTasks();
+      tasks.unshift(taskData);
+      saveCompletedTasks(tasks);
+      renderCompletedTasks();
+    }
+
+    function restoreCompletedTask(index) {
+      const tasks = getCompletedTasks();
+      const [taskData] = tasks.splice(index, 1);
+      if (!taskData) return;
+      saveCompletedTasks(tasks);
+
+      const sourceContainer = document.querySelector(taskData.sourceSelector || '#inboxList');
+      if (!sourceContainer) {
+        renderCompletedTasks();
+        return;
+      }
+      const item = document.createElement('div');
+      item.className = 'task';
+      item.innerHTML = `<div class="task-top"><strong>${escapeHtml(taskData.title)}</strong>${taskData.badgeText ? `<span class="${taskData.badgeClass}">${escapeHtml(taskData.badgeText)}</span>` : ''}</div><div class="kicker">${escapeHtml(taskData.details) || 'No extra details'}</div>`;
+      sourceContainer.prepend(item);
+      enhanceTaskItem(item);
+      renderCompletedTasks();
+      sortTaskLists();
+      saveInboxTasks();
+      savePriorityTasks();
+    }
+
+    function deleteCompletedTask(index) {
+      const tasks = getCompletedTasks();
+      tasks.splice(index, 1);
+      saveCompletedTasks(tasks);
+      renderCompletedTasks();
+    }
+
+    function enhanceTaskItem(taskEl) {
+      if (taskEl.dataset.enhancedTask === 'true') return;
+
+      const existingTitle = taskEl.querySelector('strong')?.textContent?.trim() || taskEl.textContent.trim() || 'Untitled task';
+      const existingKicker = taskEl.querySelector('.kicker')?.textContent?.trim() || '';
+      const existingBadge = taskEl.querySelector('.badge');
+      const badgeText = existingBadge?.textContent?.trim() || '';
+      const badgeClass = existingBadge?.className || 'badge later';
+
+      taskEl.dataset.enhancedTask = 'true';
+      taskEl.dataset.taskTitle = existingTitle;
+      taskEl.dataset.taskDetails = existingKicker;
+      taskEl.dataset.taskBadgeText = badgeText;
+      taskEl.dataset.taskBadgeClass = badgeClass;
+      taskEl.dataset.sourceSelector = taskEl.parentElement?.id ? `#${taskEl.parentElement.id}` : '#inboxList';
+      taskEl.dataset.taskDueDate = taskEl.dataset.taskDueDate || '';
+      taskEl.dataset.taskImportance = taskEl.dataset.taskImportance || '0';
+      taskEl.dataset.taskUrgency = taskEl.dataset.taskUrgency || '0';
+
+      taskEl.innerHTML = `
+        <div class="task-row">
+          <div class="task-main">
+            <input class="task-complete" type="checkbox" aria-label="Mark task complete" />
+            <div class="task-content">
+              <div class="task-top">
+                <strong class="task-title">${escapeHtml(existingTitle)}</strong>
+                ${badgeText ? `<span class="${badgeClass}">${escapeHtml(badgeText)}</span>` : ''}
+              </div>
+              <div class="kicker">${escapeHtml(existingKicker) || 'No extra details'}</div>
+            </div>
+          </div>
+          <div class="task-actions">
+            <button class="task-action-btn" type="button" data-task-edit>Edit</button>
+          </div>
+        </div>
+      `;
+
+      taskEl.querySelector('.task-complete').addEventListener('change', (event) => {
+        if (!event.target.checked) return;
+        addCompletedTask({
+          title: taskEl.dataset.taskTitle || '',
+          details: taskEl.dataset.taskDetails || '',
+          badgeText: taskEl.dataset.taskBadgeText || '',
+          badgeClass: taskEl.dataset.taskBadgeClass || 'badge later',
+          sourceSelector: taskEl.dataset.sourceSelector || '#inboxList'
+        });
+        taskEl.remove();
+        saveInboxTasks();
+        savePriorityTasks();
+        sortTaskLists();
+      });
+
+      taskEl.querySelector('[data-task-edit]').addEventListener('click', () => {
+        const currentTitle = taskEl.dataset.taskTitle || '';
+        const currentDetails = taskEl.dataset.taskDetails || '';
+        const nextTitle = prompt('Edit task title:', currentTitle);
+        if (nextTitle === null) return;
+        const trimmedTitle = nextTitle.trim();
+        if (!trimmedTitle) return toast('Task title cannot be empty.');
+
+        const nextDetails = prompt('Edit task details:', currentDetails);
+        if (nextDetails === null) return;
+        const nextDueDate = prompt('Edit due date (YYYY-MM-DD, optional):', taskEl.dataset.taskDueDate || '');
+        if (nextDueDate === null) return;
+
+        taskEl.dataset.taskTitle = trimmedTitle;
+        taskEl.dataset.taskDetails = nextDetails.trim();
+        taskEl.dataset.taskDueDate = nextDueDate.trim();
+        taskEl.querySelector('.task-title').textContent = trimmedTitle;
+        const dueDateLabel = taskEl.dataset.taskDueDate ? ` · Due ${taskEl.dataset.taskDueDate}` : '';
+        taskEl.querySelector('.kicker').textContent = `${taskEl.dataset.taskDetails || 'No extra details'}${dueDateLabel}`;
+        toast('Task updated.');
+        saveInboxTasks();
+        savePriorityTasks();
+        sortTaskLists();
+      });
+    }
+
+    function enhanceTasks(root = document) {
+      root.querySelectorAll('.task:not(.column .task)').forEach(task => {
+        if (task.closest('#completedTasks')) return;
+        enhanceTaskItem(task);
+      });
+    }
+
+    function classifyPriority(importance, urgency) {
+      if (importance >= 4 && urgency >= 4) {
+        return { key: 'priorityUrgentImportant', label: 'Do now', badgeClass: 'badge urgent-important' };
+      }
+      if (importance >= 4) {
+        return { key: 'priorityImportant', label: 'Schedule', badgeClass: 'badge important' };
+      }
+      if (urgency >= 4) {
+        return { key: 'priorityUrgent', label: 'Streamline', badgeClass: 'badge urgent' };
+      }
+      return { key: 'priorityLater', label: 'Defer', badgeClass: 'badge later' };
+    }
+
+    function addTaskToPriorityPlanner(taskData) {
+      const bucket = classifyPriority(taskData.importance, taskData.urgency);
+      const targetList = document.getElementById(bucket.key);
+      if (!targetList) return;
+      const item = document.createElement('div');
+      item.className = 'task';
+      item.dataset.taskDueDate = taskData.dueDate || '';
+      item.dataset.taskImportance = String(taskData.importance || 0);
+      item.dataset.taskUrgency = String(taskData.urgency || 0);
+      const dueDateLabel = taskData.dueDate ? ` · Due ${taskData.dueDate}` : '';
+      item.innerHTML = `<div class="task-top"><strong>${escapeHtml(taskData.title)}</strong><span class="${bucket.badgeClass}">${bucket.label}</span></div><div class="kicker">${escapeHtml(taskData.details || 'No extra details')} · Importance ${taskData.importance}/5 · Urgency ${taskData.urgency}/5 · Energy ${taskData.energy}/5${escapeHtml(dueDateLabel)}</div>`;
+      targetList.prepend(item);
+      enhanceTaskItem(item);
+    }
+
+    function getTaskDataFromElement(taskEl) {
+      const title = taskEl.dataset.taskTitle || taskEl.querySelector('.task-title')?.textContent?.trim() || taskEl.querySelector('strong')?.textContent?.trim() || '';
+      const details = taskEl.dataset.taskDetails || taskEl.querySelector('.kicker')?.textContent?.trim() || '';
+      const badgeText = taskEl.dataset.taskBadgeText || taskEl.querySelector('.badge')?.textContent?.trim() || '';
+      const badgeClass = taskEl.dataset.taskBadgeClass || taskEl.querySelector('.badge')?.className || 'badge later';
+      const sourceSelector = taskEl.dataset.sourceSelector || '#inboxList';
+      const dueDate = taskEl.dataset.taskDueDate || '';
+      const importance = Number(taskEl.dataset.taskImportance || 0);
+      const urgency = Number(taskEl.dataset.taskUrgency || 0);
+      return { title, details, badgeText, badgeClass, sourceSelector, dueDate, importance, urgency };
+    }
+
+    function saveInboxTasks() {
+      const inboxList = document.getElementById('inboxList');
+      if (!inboxList) return;
+      const tasks = Array.from(inboxList.querySelectorAll(':scope > .task')).map(getTaskDataFromElement);
+      saveStoredArray(INBOX_TASKS_STORAGE_KEY, tasks);
+    }
+
+    function savePriorityTasks() {
+      const bucketIds = ['priorityUrgentImportant', 'priorityImportant', 'priorityUrgent', 'priorityLater'];
+      const tasksByBucket = {};
+      bucketIds.forEach((bucketId) => {
+        const bucket = document.getElementById(bucketId);
+        tasksByBucket[bucketId] = bucket ? Array.from(bucket.querySelectorAll(':scope > .task')).map(getTaskDataFromElement) : [];
+      });
+      localStorage.setItem(PRIORITY_TASKS_STORAGE_KEY, JSON.stringify(tasksByBucket));
+      scheduleCloudSync();
+    }
+
+    function loadTaskDataIntoContainer(container, tasks) {
+      container.innerHTML = '';
+      tasks.forEach((taskData) => {
+        const item = document.createElement('div');
+        item.className = 'task';
+        item.dataset.taskDueDate = taskData.dueDate || '';
+        item.dataset.taskImportance = String(taskData.importance || 0);
+        item.dataset.taskUrgency = String(taskData.urgency || 0);
+        const dueDateLabel = taskData.dueDate ? ` · Due ${taskData.dueDate}` : '';
+        item.innerHTML = `<div class="task-top"><strong>${escapeHtml(taskData.title || 'Untitled task')}</strong>${taskData.badgeText ? `<span class="${taskData.badgeClass || 'badge later'}">${escapeHtml(taskData.badgeText)}</span>` : ''}</div><div class="kicker">${escapeHtml(taskData.details || 'No extra details')}${escapeHtml(dueDateLabel)}</div>`;
+        container.appendChild(item);
+      });
+    }
+
+    function getTaskSortScore(taskEl) {
+      const dueDate = taskEl.dataset.taskDueDate || '';
+      const importance = Number(taskEl.dataset.taskImportance || 0);
+      const urgency = Number(taskEl.dataset.taskUrgency || 0);
+      const dueMs = dueDate ? new Date(`${dueDate}T23:59:59`).getTime() : Number.POSITIVE_INFINITY;
+      const nowMs = Date.now();
+
+      let dueWeight = 0;
+      if (Number.isFinite(dueMs)) {
+        const daysUntilDue = Math.floor((dueMs - nowMs) / (1000 * 60 * 60 * 24));
+        if (daysUntilDue < 0) dueWeight = 1000;
+        else if (daysUntilDue === 0) dueWeight = 800;
+        else if (daysUntilDue <= 2) dueWeight = 500;
+        else dueWeight = Math.max(0, 250 - daysUntilDue);
+      }
+
+      return dueWeight + (importance * 100) + (urgency * 70);
+    }
+
+    function sortTaskContainer(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const tasks = Array.from(container.querySelectorAll(':scope > .task'));
+      tasks.sort((a, b) => getTaskSortScore(b) - getTaskSortScore(a));
+      tasks.forEach((task) => container.appendChild(task));
+    }
+
+    function sortTaskLists() {
+      sortTaskContainer('inboxList');
+      sortTaskContainer('priorityUrgentImportant');
+      sortTaskContainer('priorityImportant');
+      sortTaskContainer('priorityUrgent');
+      sortTaskContainer('priorityLater');
+    }
+
+    function loadSavedTasks() {
+      const inboxList = document.getElementById('inboxList');
+      if (inboxList) {
+        const inboxTasks = getStoredArray(INBOX_TASKS_STORAGE_KEY);
+        if (inboxTasks.length) {
+          loadTaskDataIntoContainer(inboxList, inboxTasks);
+        }
+      }
+
+      let priorityData = {};
+      try {
+        priorityData = JSON.parse(localStorage.getItem(PRIORITY_TASKS_STORAGE_KEY) || '{}') || {};
+      } catch (error) {
+        priorityData = {};
+      }
+      ['priorityUrgentImportant', 'priorityImportant', 'priorityUrgent', 'priorityLater'].forEach((bucketId) => {
+        const bucket = document.getElementById(bucketId);
+        if (!bucket) return;
+        const bucketTasks = Array.isArray(priorityData[bucketId]) ? priorityData[bucketId] : [];
+        if (bucketTasks.length) {
+          loadTaskDataIntoContainer(bucket, bucketTasks);
+        }
+      });
+    }
+
+    function parseNoteFromElement(noteEl) {
+      const title = noteEl.querySelector('strong')?.textContent?.trim() || 'Untitled note';
+      const body = noteEl.querySelector('.kicker')?.textContent?.trim() || '';
+      const tags = Array.from(noteEl.querySelectorAll('.tag')).map((tagEl) => tagEl.textContent.trim()).filter(Boolean);
+      return { title, body, tags };
+    }
+
+    function saveNotes() {
+      const noteMap = document.getElementById('noteMap');
+      if (!noteMap) return;
+      const notes = Array.from(noteMap.querySelectorAll(':scope > .note')).map(parseNoteFromElement);
+      saveStoredArray(NOTES_STORAGE_KEY, notes);
+    }
+
+    function renderNote(noteData) {
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.innerHTML = `<strong>${escapeHtml(noteData.title || 'Untitled note')}</strong><div class="kicker">${escapeHtml(noteData.body || '')}</div><div class="link-list">${(noteData.tags || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>`;
+      return note;
+    }
+
+    function loadSavedNotes() {
+      const noteMap = document.getElementById('noteMap');
+      if (!noteMap) return;
+      const notes = getStoredArray(NOTES_STORAGE_KEY);
+      if (!notes.length) return;
+      noteMap.innerHTML = '';
+      notes.forEach((noteData) => noteMap.appendChild(renderNote(noteData)));
+    }
+
+    function noteToMarkdown(noteData) {
+      const tags = (noteData.tags || []).filter(Boolean);
+      const tagLine = tags.length ? `Tags: ${tags.map((tag) => `#${tag.replace(/\s+/g, '-')}`).join(' ')}` : 'Tags:';
+      return `## ${noteData.title}\n\n${noteData.body}\n\n${tagLine}`;
+    }
+
+    function exportNotesToMarkdown() {
+      const noteMap = document.getElementById('noteMap');
+      const notes = Array.from(noteMap.querySelectorAll(':scope > .note')).map(parseNoteFromElement);
+      if (!notes.length) {
+        toast('No notes available to export.');
+        return;
+      }
+      const markdown = `# ADHD Brain Notes\n\nExported: ${new Date().toLocaleString()}\n\n${notes.map(noteToMarkdown).join('\n\n---\n\n')}\n`;
+      const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = `adhd-brain-notes-${new Date().toISOString().slice(0, 10)}.md`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+      URL.revokeObjectURL(url);
+      toast('Notes exported as Markdown.');
+    }
+
+    function normalizeGoogleCalendarEmbed(value) {
+      const trimmed = (value || '').trim();
+      if (!trimmed) return '';
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+      const calendarId = encodeURIComponent(trimmed);
+      return `https://calendar.google.com/calendar/embed?src=${calendarId}&ctz=America/Denver`;
+    }
+
+    function applyGoogleCalendarLink(rawValue) {
+      const embedUrl = normalizeGoogleCalendarEmbed(rawValue);
+      if (!embedUrl) return false;
+      const input = document.getElementById('googleCalendarUrl');
+      const embed = document.getElementById('googleCalendarEmbed');
+      if (input) input.value = embedUrl;
+      if (embed) embed.src = embedUrl;
+      localStorage.setItem(GOOGLE_CALENDAR_STORAGE_KEY, embedUrl);
+      scheduleCloudSync();
+      return true;
+    }
+
+    function saveKanbanBoard() {
+      const board = document.getElementById('kanbanBoard');
+      if (!board) return;
+      const data = {};
+      board.querySelectorAll('.column').forEach((column) => {
+        const columnKey = column.dataset.column || '';
+        data[columnKey] = Array.from(column.querySelectorAll('.task')).map((taskEl) => taskEl.textContent.trim()).filter(Boolean);
+      });
+      localStorage.setItem(KANBAN_STORAGE_KEY, JSON.stringify(data));
+      scheduleCloudSync();
+    }
+
+    function enableKanbanTaskDragging(taskEl) {
+      taskEl.draggable = true;
+      taskEl.addEventListener('dragstart', () => {
+        dragged = taskEl;
+      });
+    }
+
+    function loadKanbanBoard() {
+      const board = document.getElementById('kanbanBoard');
+      if (!board) return;
+      let data = {};
+      try {
+        data = JSON.parse(localStorage.getItem(KANBAN_STORAGE_KEY) || '{}') || {};
+      } catch (error) {
+        data = {};
+      }
+      if (!Object.keys(data).length) return;
+
+      board.querySelectorAll('.column').forEach((column) => {
+        const columnKey = column.dataset.column || '';
+        const tasks = Array.isArray(data[columnKey]) ? data[columnKey] : [];
+        if (!tasks.length) return;
+        const heading = column.querySelector('h4');
+        column.innerHTML = '';
+        if (heading) column.appendChild(heading);
+        tasks.forEach((text) => {
+          const task = document.createElement('div');
+          task.className = 'task';
+          task.textContent = text;
+          enableKanbanTaskDragging(task);
+          column.appendChild(task);
+        });
+      });
+    }
+
+    function saveObsessions() {
+      const list = document.getElementById('obsessionList');
+      if (!list) return;
+      const loops = Array.from(list.querySelectorAll(':scope > .task strong')).map((strongEl) => strongEl.textContent.trim()).filter(Boolean);
+      saveStoredArray(OBSESSIONS_STORAGE_KEY, loops);
+    }
+
+    function loadObsessions() {
+      const list = document.getElementById('obsessionList');
+      if (!list) return;
+      const loops = getStoredArray(OBSESSIONS_STORAGE_KEY);
+      if (!loops.length) return;
+      list.innerHTML = '';
+      loops.forEach((text) => {
+        const item = document.createElement('div');
+        item.className = 'task';
+        item.innerHTML = `<strong>${escapeHtml(text)}</strong><div class="kicker">Saved privately for later reframing.</div>`;
+        list.appendChild(item);
+      });
+      enhanceTasks(list);
+    }
+
+    function saveScanResults() {
+      const scanResults = document.getElementById('scanResults');
+      if (!scanResults) return;
+      const items = Array.from(scanResults.querySelectorAll(':scope > .scan-result')).map((el) => el.innerHTML);
+      saveStoredArray(SCAN_RESULTS_STORAGE_KEY, items);
+    }
+
+    function loadScanResults() {
+      const scanResults = document.getElementById('scanResults');
+      if (!scanResults) return;
+      const items = getStoredArray(SCAN_RESULTS_STORAGE_KEY);
+      if (!items.length) return;
+      scanResults.innerHTML = '';
+      items.forEach((itemHtml) => {
+        const item = document.createElement('div');
+        item.className = 'scan-result';
+        item.innerHTML = itemHtml;
+        scanResults.appendChild(item);
+      });
+    }
+
+    document.getElementById('configureClaude').addEventListener('click', () => toast('Claude API is intentionally blank. When you get a key, wire this button to your secure backend.'));
+    document.getElementById('quickCapture').addEventListener('click', () => setPage('inbox'));
+    document.getElementById('newDialogue').addEventListener('click', () => setPage('dialogue'));
+
+    document.getElementById('saveInboxItem').addEventListener('click', () => {
+      const title = document.getElementById('inboxTitle').value.trim();
+      const details = document.getElementById('inboxDetails').value.trim();
+      const type = document.getElementById('inboxType').value;
+      const importance = Number(document.getElementById('inboxImportance').value);
+      const urgency = Number(document.getElementById('inboxUrgency').value);
+      const energy = Number(document.getElementById('inboxEnergy').value);
+      const dueDate = document.getElementById('inboxDueDate').value;
+      if (!title) return toast('Add a title first.');
+      const item = document.createElement('div');
+      item.className = 'task';
+      item.dataset.taskDueDate = dueDate || '';
+      item.dataset.taskImportance = String(importance || 0);
+      item.dataset.taskUrgency = String(urgency || 0);
+      const dueDateLabel = dueDate ? ` · Due ${dueDate}` : '';
+      item.innerHTML = `<div class="task-top"><strong>${escapeHtml(title)}</strong><span class="badge later">${escapeHtml(type)}</span></div><div class="kicker">${escapeHtml(details || 'Saved without extra detail')}${escapeHtml(dueDateLabel)}</div>`;
+      document.getElementById('inboxList').prepend(item);
+      enhanceTaskItem(item);
+      if (type === 'Task') {
+        addTaskToPriorityPlanner({ title, details, importance, urgency, energy, dueDate });
+      }
+      document.getElementById('inboxTitle').value = '';
+      document.getElementById('inboxDetails').value = '';
+      document.getElementById('inboxImportance').value = '3';
+      document.getElementById('inboxUrgency').value = '3';
+      document.getElementById('inboxEnergy').value = '3';
+      document.getElementById('inboxDueDate').value = '';
+      toast(type === 'Task' ? 'Saved to inbox and auto-sorted in Priorities.' : 'Saved to inbox.');
+      sortTaskLists();
+      saveInboxTasks();
+      savePriorityTasks();
+    });
+
+    document.getElementById('runDialogue').addEventListener('click', () => {
+      const prompt = document.getElementById('dialoguePrompt').value.trim() || 'I am overwhelmed by too many competing tasks.';
+      const windowEl = document.getElementById('dialogueWindow');
+      const simulated = [
+        `<div class="dialogue-turn"><strong>You:</strong> ${prompt}</div>`,
+        `<div class="dialogue-turn ai"><strong>NTE:</strong> Which part is actually hard: deciding, starting, or finishing?</div>`,
+        `<div class="dialogue-turn ai"><strong>NTE:</strong> What would make this task small enough to begin in 10 minutes?</div>`
+      ];
+      simulated.forEach(html => {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        windowEl.appendChild(div.firstChild);
+      });
+      document.getElementById('dialogueSummary').textContent = `Topic: ${prompt}. Likely bottleneck: unclear first move. Suggested next step: define a tiny, visible starting action and put it on the weekly board.`;
+    });
+
+    document.getElementById('saveDialogueNote').addEventListener('click', () => {
+      const noteMap = document.getElementById('noteMap');
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.innerHTML = `<strong>Dialogue insight</strong><div class="kicker">${document.getElementById('dialogueSummary').textContent}</div><div class="link-list"><span class="tag">dialogue</span><span class="tag">saved</span><span class="tag">weekly-review</span></div>`;
+      noteMap.prepend(note);
+      setPage('notes');
+      toast('Saved to Zettelkasten board.');
+      saveNotes();
+    });
+
+    document.getElementById('addNote').addEventListener('click', () => {
+      const title = document.getElementById('noteTitle').value.trim();
+      const body = document.getElementById('noteBody').value.trim();
+      const tags = document.getElementById('noteTags').value.trim();
+      if (!title || !body) return toast('Add a title and note body first.');
+      const note = renderNote({ title, body, tags: tags.split(',').map(tag => tag.trim()).filter(Boolean) });
+      document.getElementById('noteMap').prepend(note);
+      document.getElementById('noteTitle').value = '';
+      document.getElementById('noteBody').value = '';
+      document.getElementById('noteTags').value = '';
+      toast('Note added.');
+      saveNotes();
+    });
+
+    document.getElementById('exportNotesMarkdown').addEventListener('click', exportNotesToMarkdown);
+
+    document.getElementById('scanInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const results = document.getElementById('scanResults');
+      results.prepend(Object.assign(document.createElement('div'), { className: 'scan-result', innerHTML: `<strong>Scanned ${file.name}:</strong> simulated OCR captured. Add real OCR service later.` }));
+      toast('Scan added to prototype OCR queue.');
+      saveScanResults();
+    });
+    document.getElementById('scanToInbox').addEventListener('click', () => toast('Scan results can now be routed to inbox in this prototype flow.'));
+    document.getElementById('scanToNotes').addEventListener('click', () => toast('Scan results saved as notes in the prototype flow.'));
+
+    document.getElementById('saveObsession').addEventListener('click', () => {
+      const text = document.getElementById('obsessionText').value.trim();
+      if (!text) return toast('Write the looping thought first.');
+      const item = document.createElement('div');
+      item.className = 'task';
+      item.innerHTML = `<strong>${text}</strong><div class="kicker">Saved privately for later reframing.</div>`;
+      document.getElementById('obsessionList').prepend(item);
+      enhanceTaskItem(item);
+      document.getElementById('obsessionText').value = '';
+      toast('Loop saved.');
+      saveObsessions();
+    });
+    document.getElementById('sendToDialogue').addEventListener('click', () => {
+      const text = document.getElementById('obsessionText').value.trim();
+      if (text) document.getElementById('dialoguePrompt').value = text;
+      setPage('dialogue');
+    });
+
+    document.getElementById('completedTasks').addEventListener('click', (event) => {
+      const restoreButton = event.target.closest('[data-restore-index]');
+      if (restoreButton) {
+        restoreCompletedTask(Number(restoreButton.dataset.restoreIndex));
+        return;
+      }
+      const deleteButton = event.target.closest('[data-delete-index]');
+      if (deleteButton) {
+        deleteCompletedTask(Number(deleteButton.dataset.deleteIndex));
+      }
+    });
+
+    document.getElementById('saveCalendarLink').addEventListener('click', () => {
+      const rawValue = document.getElementById('googleCalendarUrl').value;
+      if (!applyGoogleCalendarLink(rawValue)) {
+        toast('Enter a Google Calendar embed URL or a public calendar ID first.');
+        return;
+      }
+      toast('Google Calendar linked.');
+    });
+
+    document.getElementById('openGoogleCalendar').addEventListener('click', () => {
+      const inputValue = document.getElementById('googleCalendarUrl').value;
+      const linked = normalizeGoogleCalendarEmbed(inputValue) || localStorage.getItem(GOOGLE_CALENDAR_STORAGE_KEY);
+      if (linked) {
+        window.open(linked, '_blank', 'noopener,noreferrer');
+        return;
+      }
+      window.open('https://calendar.google.com', '_blank', 'noopener,noreferrer');
+    });
+
+    let dragged = null;
+    document.querySelectorAll('.column .task').forEach(enableKanbanTaskDragging);
+    document.querySelectorAll('.column').forEach(col => {
+      col.addEventListener('dragover', e => e.preventDefault());
+      col.addEventListener('drop', e => {
+        e.preventDefault();
+        if (dragged) {
+          col.appendChild(dragged);
+          saveKanbanBoard();
+        }
+      });
+    });
+
+    window.addEventListener('beforeunload', () => {
+      saveCloudStateNow();
+    });
+
+    (async function initializeApp() {
+      await loadCloudState();
+      loadSavedTasks();
+      loadSavedNotes();
+      loadKanbanBoard();
+      loadObsessions();
+      loadScanResults();
+      applyGoogleCalendarLink(localStorage.getItem(GOOGLE_CALENDAR_STORAGE_KEY));
+      renderCompletedTasks();
+      enhanceTasks();
+      sortTaskLists();
+      saveInboxTasks();
+      savePriorityTasks();
+      saveNotes();
+      saveKanbanBoard();
+      saveObsessions();
+      saveScanResults();
+      lucide.createIcons();
+    })();
+  </script>
+</body>
+</html>
