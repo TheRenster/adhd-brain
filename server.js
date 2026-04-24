@@ -16,15 +16,20 @@ if (!fs.existsSync(DATA_DIR)) {
 
 function readState() {
   try {
-    if (!fs.existsSync(DATA_FILE)) return {};
-    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    if (!fs.existsSync(DATA_FILE)) return { state: {}, updatedAt: 0 };
+    const parsed = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    if (parsed && typeof parsed === 'object' && parsed.state) {
+      return { state: parsed.state, updatedAt: Number(parsed.updatedAt || 0) };
+    }
+    // Backward compatibility with old shape where file stored only state
+    return { state: parsed || {}, updatedAt: 0 };
   } catch (error) {
-    return {};
+    return { state: {}, updatedAt: 0 };
   }
 }
 
-function writeState(state) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(state, null, 2), 'utf8');
+function writeState(payload) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(payload, null, 2), 'utf8');
 }
 
 app.get('/health', (_req, res) => {
@@ -32,16 +37,26 @@ app.get('/health', (_req, res) => {
 });
 
 app.get('/api/state', (_req, res) => {
-  res.json({ state: readState() });
+  const payload = readState();
+  res.json(payload);
 });
 
 app.post('/api/state', (req, res) => {
   const state = req.body?.state;
+  const updatedAt = Number(req.body?.updatedAt || 0);
   if (!state || typeof state !== 'object') {
     return res.status(400).json({ error: 'Invalid state payload.' });
   }
-  writeState(state);
-  return res.json({ ok: true, savedAt: new Date().toISOString() });
+  const existing = readState();
+  if (updatedAt >= Number(existing.updatedAt || 0)) {
+    writeState({ state, updatedAt });
+    return res.json({ ok: true, savedAt: new Date(updatedAt || Date.now()).toISOString() });
+  }
+  return res.json({
+    ok: false,
+    ignored: true,
+    reason: 'Incoming state is older than stored state.'
+  });
 });
 
 app.get('/', (_req, res) => {

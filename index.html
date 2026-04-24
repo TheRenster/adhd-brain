@@ -544,6 +544,7 @@
     const KANBAN_STORAGE_KEY = 'nte-kanban-columns';
     const OBSESSIONS_STORAGE_KEY = 'nte-obsession-loops';
     const SCAN_RESULTS_STORAGE_KEY = 'nte-scan-results';
+    const LOCAL_STATE_UPDATED_AT_KEY = 'nte-local-state-updated-at';
     const STORAGE_KEYS = [
       COMPLETED_STORAGE_KEY,
       INBOX_TASKS_STORAGE_KEY,
@@ -602,6 +603,15 @@
       return state;
     }
 
+    function getLocalUpdatedAt() {
+      return Number(localStorage.getItem(LOCAL_STATE_UPDATED_AT_KEY) || '0');
+    }
+
+    function markLocalUpdated(timestamp = Date.now()) {
+      localStorage.setItem(LOCAL_STATE_UPDATED_AT_KEY, String(timestamp));
+      return timestamp;
+    }
+
     function hydrateAppState(state) {
       if (!state || typeof state !== 'object') return;
       STORAGE_KEYS.forEach((key) => {
@@ -617,7 +627,12 @@
         const response = await fetch(CLOUD_SYNC_ENDPOINT, { method: 'GET' });
         if (!response.ok) return;
         const payload = await response.json();
-        hydrateAppState(payload?.state);
+        const cloudUpdatedAt = Number(payload?.updatedAt || 0);
+        const localUpdatedAt = getLocalUpdatedAt();
+        if (cloudUpdatedAt > localUpdatedAt) {
+          hydrateAppState(payload?.state);
+          markLocalUpdated(cloudUpdatedAt);
+        }
       } catch (error) {
         console.warn('Cloud state unavailable; using local storage.');
       }
@@ -625,11 +640,13 @@
 
     async function saveCloudStateNow() {
       if (!location.protocol.startsWith('http')) return;
+      const updatedAt = getLocalUpdatedAt();
       try {
         await fetch(CLOUD_SYNC_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ state: collectAppState() })
+          keepalive: true,
+          body: JSON.stringify({ state: collectAppState(), updatedAt })
         });
       } catch (error) {
         console.warn('Cloud save failed; local data still kept in browser.');
@@ -637,10 +654,30 @@
     }
 
     function scheduleCloudSync() {
+      markLocalUpdated();
       clearTimeout(cloudSyncTimeout);
       cloudSyncTimeout = setTimeout(() => {
         saveCloudStateNow();
       }, 350);
+    }
+
+    function flushCloudStateOnUnload() {
+      if (!location.protocol.startsWith('http')) return;
+      const payload = JSON.stringify({
+        state: collectAppState(),
+        updatedAt: markLocalUpdated()
+      });
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(CLOUD_SYNC_ENDPOINT, blob);
+        return;
+      }
+      fetch(CLOUD_SYNC_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: payload
+      }).catch(() => {});
     }
 
     function updateCompletedEmptyState() {
@@ -1255,9 +1292,7 @@
       });
     });
 
-    window.addEventListener('beforeunload', () => {
-      saveCloudStateNow();
-    });
+    window.addEventListener('beforeunload', flushCloudStateOnUnload);
 
     (async function initializeApp() {
       await loadCloudState();
@@ -1270,12 +1305,6 @@
       renderCompletedTasks();
       enhanceTasks();
       sortTaskLists();
-      saveInboxTasks();
-      savePriorityTasks();
-      saveNotes();
-      saveKanbanBoard();
-      saveObsessions();
-      saveScanResults();
       lucide.createIcons();
     })();
   </script>
